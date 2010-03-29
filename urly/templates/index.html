@@ -1,0 +1,185 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en"> 
+	<head> 
+		<meta http-equiv="Content-type" content="text/html; charset=utf-8" /> 
+		<meta http-equiv="Content-Language" content="en-us" /> 
+    
+    		<title>Urly | Pony powered urls</title> 
+        
+    <link rel="shortcut icon" href="{{MEDIA_URL}}img/favicon.ico" type="image/x-icon">
+
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.0/jquery-ui.min.js"></script>
+    
+    <style type="text/css">
+    
+    body {font:12px/1.4em Verdana,sans-serif}
+    a {text-decoration:none}
+    img {border:none}
+    h5{margin-top:0}
+    
+    #post-result{
+      
+      height:80px;
+      width: 20%;
+      background-color:#fff;
+      color: #D44c07;
+      text-align:center;
+      margin-top: 4em;
+      margin-left: auto;
+      margin-right: auto;
+      border: 3px solid #c62900;
+      
+      }    
+      
+      #d-1 {     
+         -moz-border-radius:8px;    
+         -webkit-border-radius:8px;
+         width: 60%; background-color: #fff;
+         padding-bottom:5px;
+         border: 2px solid #ff4900;
+         margin-left:15%;
+        }
+    #i-1 { font-weight:bold;color: #df3200;width: 100%; background-color: transparent; position: relative; top: 5px; left: 10px; border-style: none;height:26px; }
+    #i-1:focus { outline:none;}
+    
+    .footer-l { margin-left: 15%;position:fixed; bottom:0; width:18%; height:50px; color: #fff; text-align:center;}
+    .footer-m { margin-left: 42%;position:fixed; bottom:0; width:18%; height:50px; color: #fff; text-align:center;}
+    .footer-r { margin-left: 70%;position:fixed; bottom:0; width:18%; height:50px; color: #fff; text-align:center;}
+
+    .detail-box {background-color: #ebebeb; color:#df3200;height:180px;  -moz-border-radius:8px;  -webkit-border-radius:8px;}
+
+
+    </style>
+    
+    
+  </head>
+  
+  
+<body style="background-color:#D44c07">
+
+
+<div style="height:110px;background-color:#fff;margin-top:150px;width:100%" >
+
+<a href="javascript:;" id="main"> <img style="display:block;margin-left: auto;margin-right: auto;" src="{{MEDIA_URL}}img/logo.png" /> </a>
+
+<div id="about" style="display:none;background-color:#fff;padding-left:20%;padding-bottom:5px;">
+
+ Logo by <a href="http://gfx-scene.com">Gfx-Scene</a> 
+ <a href="http://www.djangoproject.com/"><img src="http://media.djangoproject.com/img/badges/djangoproject120x25.gif" border="0" alt="A Django project." title="A Django project." /></a>
+ </div>
+
+</div>
+
+<div style="margin-top:4em;margin-left: auto;margin-right: auto;width:70%;">
+<form action="/urly/get/" method="post" id="urly-form">
+
+<a href="javascript:;"  id="urly-btn"><img src="{{MEDIA_URL}}img/Button.png" style="float:right;margin-right:13%;margin-top:-5px;" /></a>
+
+
+<div id="d-1">
+
+<input id="i-1" style="font-size:18px;" type="text" name="url" value="Put that long url here!"/>
+
+</div>
+
+
+</form>
+
+</div>
+
+<div id="post-result" style="display:none"></div>
+
+
+<div class="footer-l drawer"><img src="{{MEDIA_URL}}img/arrow-button.png" alt="Popular" /><div id="l-detail" class="detail-box" style="display:none"></div></div>
+<div class="footer-m drawer"><img src="{{MEDIA_URL}}img/arrow-button.png" alt="Random" /><div id="m-detail" class="detail-box" style="display:none"></div></div>
+<div class="footer-r drawer"><img src="{{MEDIA_URL}}img/arrow-button.png" alt="Latest" /><div id="r-detail" class="detail-box" style="display:none"></div></div>
+
+<script>
+$(document).ready(function() {
+  $('#urly-btn').click( function() { 
+    
+    $.post("/urly/get/", $("#urly-form").serialize(),    function(data){
+      
+      
+      $('#post-result').html(data);
+      $("#post-result").show();
+      
+    
+      });
+      
+    
+ 
+    });
+    var navDuration = 150;
+      $('.drawer').click(function() {
+        
+        
+          $(this).animate({ height : "180px" }, navDuration);   
+          $('.detail-box').show();
+          
+          var drawerID = $(this).children(':nth-child(2)').attr("id" );
+          
+          if( drawerID == 'l-detail'){
+            
+            $.getJSON('urly/popular/', function(data) {
+              
+              $('#l-detail').html('<br/><h5 >Popular Urlies</h5>');
+              
+              $.each(data, function(i,item){
+                 
+                 $('#l-detail').append(item.fields.url + '<br /><br />');
+                });
+            
+            });
+            
+            }
+            
+          else if( drawerID == 'r-detail'){
+            
+            $.getJSON('urly/latest/', function(data) {
+              
+              $('#r-detail').html('<br/><h5 >Latest Urlies</h5>');
+              
+              $.each(data, function(i,item){
+                 
+                 $('#r-detail').append(item.fields.url + '<br /><br />');
+                });
+            
+            });
+            
+            }
+          else if( drawerID == 'm-detail'){
+            
+            $.getJSON('urly/random/', function(data) {
+              
+              $('#m-detail').html('<br/><h5 >Random Urlies</h5>');
+              
+              $.each(data, function(i,item){
+                 
+                 $('#m-detail').append(item.fields.url + '<br /><br />');
+                });
+            
+            });
+            
+            }
+          
+                   
+      }, function() {
+          $(this).animate({ height : "50px" }, navDuration);
+          $('.detail-box').hide();
+
+      });
+      
+      $('#main').toggle(function() {
+        $('#about').show();
+      }, function() {
+        $('#about').hide();
+      });
+ 
+ });
+</script>
+
+</body>
+</html>
