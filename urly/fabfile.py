@@ -12,5 +12,7 @@ def pack():
 def deploy():
   rsync_project(remote_dir='/var/www/html/', exclude= ('settings.py', 'urly.wsgi', 'db') )
   run('cd /var/www/html/urly')
+  
+  
   #run('chown -R apache:apache *')
   run('touch urly.wsgi')
